@@ -49,6 +49,54 @@ type testcaseOption_Get[V any] struct {
 
 ///
 
+func TestOption_GetOrElse(t *testing.T) {
+	testOption_GetOrElse(t, []testcaseOption_GetOrElse[int]{
+		{
+			name:   "some int",
+			option: Some[int]{42},
+			orElse: 3,
+			want:   42,
+		},
+		{
+			name:   "none int",
+			option: None[int]{},
+			orElse: 3,
+			want:   3,
+		},
+	})
+	testOption_GetOrElse(t, []testcaseOption_GetOrElse[string]{
+		{
+			name:   "some string",
+			option: Some[string]{"hello"},
+			orElse: "bye",
+			want:   "hello",
+		},
+		{
+			name:   "none string",
+			option: None[string]{},
+			orElse: "bye",
+			want:   "bye",
+		},
+	})
+}
+
+func testOption_GetOrElse[V any](t *testing.T, tests []testcaseOption_GetOrElse[V]) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			AssertEqual(t, tt.want, tt.option.GetOrElse(tt.orElse))
+		})
+	}
+}
+
+type testcaseOption_GetOrElse[V any] struct {
+	name   string
+	option Option[V]
+	orElse V
+	want   V
+}
+
+///
+
 func TestOption_Map(t *testing.T) {
 	addOneInt := func(v int) int { return v + 1 }
 	testOption_Map(t, []testcaseOption_Map[int]{
