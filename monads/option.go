@@ -10,6 +10,10 @@ type Some[V any] struct {
 	v V
 }
 
+func SomeOf[V any](v V) Some[V] {
+	return Some[V]{v}
+}
+
 func (o Some[V]) Get() V {
 	return o.v
 }
@@ -23,6 +27,10 @@ func (o Some[V]) Map(fn func(v V) V) Option[V] {
 }
 
 type None[V any] struct{}
+
+func NoneOf[V any]() None[V] {
+	return None[V]{}
+}
 
 func (o None[V]) Get() V {
 	return *new(V)
