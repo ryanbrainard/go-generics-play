@@ -1,6 +1,7 @@
-package monads
+package options
 
 import (
+	"go.ryanbrainard.com/go-generics-play/testutil"
 	"testing"
 )
 
@@ -36,7 +37,7 @@ func TestOption_Get(t *testing.T) {
 func testOption_Get[V any](t *testing.T, tests []testcaseOption_Get[V]) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			AssertEqual(t, tt.want, tt.option.Get())
+			testutil.AssertEqual(t, tt.want, tt.option.Get())
 		})
 	}
 }
@@ -83,7 +84,7 @@ func TestOption_GetOrElse(t *testing.T) {
 func testOption_GetOrElse[V any](t *testing.T, tests []testcaseOption_GetOrElse[V]) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			AssertEqual(t, tt.want, tt.option.GetOrElse(tt.orElse))
+			testutil.AssertEqual(t, tt.want, tt.option.GetOrElse(tt.orElse))
 		})
 	}
 }
@@ -134,7 +135,7 @@ func TestOption_Map(t *testing.T) {
 func testOption_Map[V any](t *testing.T, tests []testcaseOption_Map[V]) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			AssertEqual(t, tt.want, tt.option.Map(tt.fn))
+			testutil.AssertEqual(t, tt.want, tt.option.Map(tt.fn))
 		})
 	}
 }

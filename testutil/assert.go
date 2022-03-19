@@ -1,4 +1,4 @@
-package monads
+package testutil
 
 import (
 	"reflect"
