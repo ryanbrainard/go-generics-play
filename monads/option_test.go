@@ -10,24 +10,24 @@ func TestOption_Get(t *testing.T) {
 	testOption_Get(t, []testcaseOption_Get[int]{
 		{
 			name:   "some int",
-			option: Some[int]{42},
+			option: some[int]{42},
 			want:   42,
 		},
 		{
 			name:   "none int",
-			option: None[int]{},
+			option: none[int]{},
 			want:   0,
 		},
 	})
 	testOption_Get(t, []testcaseOption_Get[string]{
 		{
 			name:   "some string",
-			option: Some[string]{"hello"},
+			option: some[string]{"hello"},
 			want:   "hello",
 		},
 		{
 			name:   "none string",
-			option: None[string]{},
+			option: none[string]{},
 			want:   "",
 		},
 	})
@@ -53,13 +53,13 @@ func TestOption_GetOrElse(t *testing.T) {
 	testOption_GetOrElse(t, []testcaseOption_GetOrElse[int]{
 		{
 			name:   "some int",
-			option: Some[int]{42},
+			option: some[int]{42},
 			orElse: 3,
 			want:   42,
 		},
 		{
 			name:   "none int",
-			option: None[int]{},
+			option: none[int]{},
 			orElse: 3,
 			want:   3,
 		},
@@ -67,13 +67,13 @@ func TestOption_GetOrElse(t *testing.T) {
 	testOption_GetOrElse(t, []testcaseOption_GetOrElse[string]{
 		{
 			name:   "some string",
-			option: Some[string]{"hello"},
+			option: some[string]{"hello"},
 			orElse: "bye",
 			want:   "hello",
 		},
 		{
 			name:   "none string",
-			option: None[string]{},
+			option: none[string]{},
 			orElse: "bye",
 			want:   "bye",
 		},
@@ -102,15 +102,15 @@ func TestOption_Map(t *testing.T) {
 	testOption_Map(t, []testcaseOption_Map[int]{
 		{
 			name:   "some int fn same return type",
-			option: Some[int]{42},
+			option: some[int]{42},
 			fn:     addOneInt,
-			want:   Some[int]{43},
+			want:   some[int]{43},
 		},
 		{
 			name:   "none int fn same return type",
-			option: None[int]{},
+			option: none[int]{},
 			fn:     addOneInt,
-			want:   None[int]{},
+			want:   none[int]{},
 		},
 	})
 
@@ -118,15 +118,15 @@ func TestOption_Map(t *testing.T) {
 	testOption_Map(t, []testcaseOption_Map[string]{
 		{
 			name:   "some string same return type",
-			option: Some[string]{"hello"},
+			option: some[string]{"hello"},
 			fn:     concatOneString,
-			want:   Some[string]{"hello1"},
+			want:   some[string]{"hello1"},
 		},
 		{
 			name:   "none string  same return type",
-			option: None[string]{},
+			option: none[string]{},
 			fn:     concatOneString,
-			want:   None[string]{},
+			want:   none[string]{},
 		},
 	})
 }
