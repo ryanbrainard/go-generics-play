@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	someInt      = options.SomeOf(42)
-	someStr      = options.SomeOf("hello")
-	noneInt      = options.NoneOf[int]()
-	noneStr      = options.NoneOf[string]()
+	someInt      = options.Some(42)
+	someStr      = options.Some("hello")
+	noneInt      = options.None[int]()
+	noneStr      = options.None[string]()
 	otherStr     = "hola"
-	someOtherStr = options.SomeOf(otherStr)
+	someOtherStr = options.Some(otherStr)
 	addOne       = func(v int) int { return v + 1 }
 	addBang      = func(v string) string { return v + "!" }
 )
@@ -78,7 +78,7 @@ func ExampleNone_OrElse() {
 }
 
 func ExampleMap() {
-	opt := options.SomeOf(42)
+	opt := options.Some(42)
 	fn := func(v int) string { return strconv.Itoa(v) + "!" }
 	fmt.Println(options.Map[int, string](opt, fn).Get())
 
@@ -89,10 +89,10 @@ func ExampleFold() {
 	fn := func(v int) string { return strconv.Itoa(v) + "!" }
 	ifNone := "not found"
 
-	some := options.SomeOf(42)
+	some := options.Some(42)
 	fmt.Println(options.Fold[int, string](some, ifNone)(fn))
 
-	none := options.NoneOf[int]()
+	none := options.None[int]()
 	fmt.Println(options.Fold[int, string](none, ifNone)(fn))
 
 	// Output:

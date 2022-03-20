@@ -7,10 +7,10 @@ import (
 )
 
 var (
-	rightStr      = eithers.RightOf[error, string]("hello")
-	leftErr       = eithers.LeftOf[error, string](errors.New("boom"))
+	rightStr      = eithers.Right[error, string]("hello")
+	leftErr       = eithers.Left[error, string](errors.New("boom"))
 	otherStr      = "hola"
-	rightOtherStr = eithers.RightOf[error, string](otherStr)
+	rightOtherStr = eithers.Right[error, string](otherStr)
 	addOne        = func(v int) int { return v + 1 }
 	addBang       = func(v string) string { return v + "!" }
 )

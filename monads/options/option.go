@@ -23,7 +23,7 @@ type some[V any] struct {
 	v V
 }
 
-func SomeOf[V any](v V) Option[V] {
+func Some[V any](v V) Option[V] {
 	return some[V]{v}
 }
 
@@ -49,7 +49,7 @@ func (o some[V]) OrElse(_ Option[V]) Option[V] {
 
 type none[V any] struct{}
 
-func NoneOf[V any]() Option[V] {
+func None[V any]() Option[V] {
 	return none[V]{}
 }
 

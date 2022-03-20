@@ -10,13 +10,17 @@ type Either[L, R any] interface {
 
 	// OrElse returns this Right or the given argument if this is a Left
 	OrElse(Either[L, R]) Either[L, R]
+
+	Split() (L, R)
+
+	Swap() Either[R, L]
 }
 
 type right[L, R any] struct {
 	r R
 }
 
-func RightOf[L, R any](r R) Either[L, R] {
+func Right[L, R any](r R) Either[L, R] {
 	return right[L, R]{r}
 }
 
@@ -32,11 +36,19 @@ func (e right[L, R]) OrElse(Either[L, R]) Either[L, R] {
 	return e
 }
 
+func (e right[L, R]) Split() (L, R) {
+	return *new(L), e.r
+}
+
+func (e right[L, R]) Swap() Either[R, L] {
+	return left[R, L]{e.r}
+}
+
 type left[L, R any] struct {
 	l L
 }
 
-func LeftOf[L, R any](l L) Either[L, R] {
+func Left[L, R any](l L) Either[L, R] {
 	return left[L, R]{l}
 }
 
@@ -50,6 +62,14 @@ func (e left[L, R]) Map(fn func(R) R) Either[L, R] {
 
 func (e left[L, R]) OrElse(or Either[L, R]) Either[L, R] {
 	return or
+}
+
+func (e left[L, R]) Split() (L, R) {
+	return e.l, *new(R)
+}
+
+func (e left[L, R]) Swap() Either[R, L] {
+	return right[R, L]{e.l}
 }
 
 // Map applies the given function if this is a Right.
