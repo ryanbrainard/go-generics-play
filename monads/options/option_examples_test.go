@@ -17,46 +17,64 @@ var (
 	addBang      = func(v string) string { return v + "!" }
 )
 
-func ExampleSomeOf() {
-	fmt.Println("A:", someInt)
-	fmt.Println("B:", someStr)
-	fmt.Println("C:", someInt.Get())
-	fmt.Println("D:", someInt.Map(addOne))
-	fmt.Println("E:", someStr.Map(addBang))
-	fmt.Println("F:", someStr.GetOrElse(otherStr))
-	fmt.Println("G:", someStr.OrElse(someOtherStr))
-	fmt.Println("H:", someStr.Map(addBang).OrElse(someOtherStr).Get())
+func ExampleSome_Fold() {
+	fmt.Println(someStr.Fold(otherStr)(addBang))
 
-	// Output:
-	// A: {42}
-	// B: {hello}
-	// C: 42
-	// D: {43}
-	// E: {hello!}
-	// F: hello
-	// G: {hello}
-	// H: hello!
+	// Output: hello!
 }
 
-func ExampleNoneOf() {
-	fmt.Println("A:", noneInt)
-	fmt.Println("B:", noneStr)
-	fmt.Println("C:", noneInt.Get())
-	fmt.Println("D:", noneInt.Map(addOne))
-	fmt.Println("E:", noneStr.Map(addBang))
-	fmt.Println("F:", noneStr.GetOrElse(otherStr))
-	fmt.Println("G:", noneStr.OrElse(someOtherStr))
-	fmt.Println("H:", noneStr.Map(addBang).OrElse(someOtherStr).Get())
+func ExampleNone_Fold() {
+	fmt.Println(noneStr.Fold(otherStr)(addBang))
 
-	// Output:
-	// A: {}
-	// B: {}
-	// C: 0
-	// D: {}
-	// E: {}
-	// F: hola
-	// G: {hola}
-	// H: hola
+	// Output: hola
+}
+
+func ExampleSome_Get() {
+	fmt.Println(someInt.Get())
+
+	// Output: 42
+}
+
+func ExampleNone_Get() {
+	fmt.Println(noneInt.Get())
+
+	// Output: 0
+}
+
+func ExampleSome_GetOrElse() {
+	fmt.Println(someStr.GetOrElse(otherStr))
+
+	// Output: hello
+}
+
+func ExampleNone_GetOrElse() {
+	fmt.Println(noneStr.GetOrElse(otherStr))
+
+	// Output: hola
+}
+
+func ExampleSome_Map() {
+	fmt.Println(someStr.Map(addBang))
+
+	// Output: {hello!}
+}
+
+func ExampleNone_Map() {
+	fmt.Println(noneStr.Map(addBang))
+
+	// Output: {}
+}
+
+func ExampleSome_Else() {
+	fmt.Println(someStr.OrElse(someOtherStr))
+
+	// Output: {hello}
+}
+
+func ExampleNone_OrElse() {
+	fmt.Println(noneStr.OrElse(someOtherStr))
+
+	// Output: {hola}
 }
 
 func ExampleMap() {
