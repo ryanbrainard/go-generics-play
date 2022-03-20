@@ -5,13 +5,13 @@ Just playing around with generics in Go 1.18.
 ## Contents
 
 - Monads
-  - Option
+  - [Option](https://github.com/ryanbrainard/go-generics-play/tree/main/monads/options)
     - some
     - none
-  - Either
+  - [Either](https://github.com/ryanbrainard/go-generics-play/tree/main/monads/eithers)
     - left
     - right
-  - Result
+  - [Result](https://github.com/ryanbrainard/go-generics-play/tree/main/monads/results)
     - (Ok)
     - (Err)
 
@@ -27,51 +27,9 @@ they can be chained together with `FlatMap`, and then be success/error handled o
 Given a function that returns a `Result[R any]` and success/error handlers that unify to the same type:
 
 ```go
-func CallServer(name string, raise bool) results.Result[string] {
-	fmt.Println("server: " + name)
-	if raise {
-		return results.Err[string](errors.New("failed to call server " + name))
-	}
-	return results.Ok("server " + name + " called successfully")
-}
-
-func onSuccess(msg string) bool {
-    fmt.Println("success: " + msg)
-    return true
-}
-
-func onError(err error) bool {
-    fmt.Println("error: " + err.Error())
-    return false
-}
+parseUserIdResult := parseUserId("2")                          // returns `Result[int64]` (i.e. `int64` or `error`).
+loadUserResult := results.FlatMap(parseUserIdResult, loadUser) // returns `Result[User]`  (i.e. `User` or `error`). skips if previous function errored.
+return results.Fold(loadUserResult, onSuccess, onError)        // returns `string` for both success and error cases.
 ```
 
-A successful chain calls Red and then Blue:
-
-```go
-successfulChain := CallServer("Red", false).
-    FlatMap(func(redMsg string) results.Result[string] {
-        return CallServer("Blue", false)
-    })
-fmt.Println(results.Fold(successfulChain, onSuccess, onError))
-
-// output:
-// server: Red
-// server: Blue
-// success: server Blue called successfully
-```
-
-An unsuccessful chain calls Red, errors, so does not call Blue:
-
-```go
-unsuccessfulChain := CallServer("Red", true).
-    FlatMap(func(redMsg string) results.Result[string] {
-        return CallServer("Blue", false)
-    })
-fmt.Println(results.Fold(unsuccessfulChain, onSuccess, onError))
-
-// output:
-// server: Red
-// error: failed to call server Red
-// false
-```
+See [full example](https://github.com/ryanbrainard/go-generics-play/blob/main/monads/results/results_example_full_test.go) for details and additional examples.
