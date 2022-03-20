@@ -6,5 +6,8 @@ Just playing around with generics in Go 1.18.
 
 - Monads
   - Option
-    - Some
-    - None
+    - some
+    - none
+  - Either
+    - left
+    - right
