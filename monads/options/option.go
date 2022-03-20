@@ -1,6 +1,10 @@
 package options
 
 type Option[V any] interface {
+	// Fold returns the result of applying f to this Option's value if the Option is a Some.
+	// To return a type other than V, see options.Fold function.
+	Fold(ifEmpty V) func(func(V) V) V
+
 	// Get returns the Option's value
 	Get() V
 
@@ -23,6 +27,10 @@ func SomeOf[V any](v V) Option[V] {
 	return some[V]{v}
 }
 
+func (o some[V]) Fold(ifEmpty V) func(func(V) V) V {
+	return Fold[V, V](o, ifEmpty)
+}
+
 func (o some[V]) Get() V {
 	return o.v
 }
@@ -43,6 +51,10 @@ type none[V any] struct{}
 
 func NoneOf[V any]() Option[V] {
 	return none[V]{}
+}
+
+func (o none[V]) Fold(ifEmpty V) func(func(V) V) V {
+	return Fold[V, V](o, ifEmpty)
 }
 
 func (o none[V]) Get() V {
@@ -69,5 +81,18 @@ func Map[V, R any](o Option[V], fn func(V) R) Option[R] {
 		return some[R]{fn(o.Get())}
 	default:
 		return none[R]{}
+	}
+}
+
+// Fold returns the result of applying f to this Option's value if the Option is a Some.
+// To return same type V, see Option.Fold method.
+func Fold[V, R any](o Option[V], ifEmpty R) func(func(V) R) R {
+	return func(fn func(V) R) R {
+		switch o.(type) {
+		case some[V]:
+			return fn(o.Get())
+		default:
+			return ifEmpty
+		}
 	}
 }

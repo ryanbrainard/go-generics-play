@@ -66,3 +66,18 @@ func ExampleMap() {
 
 	// Output: 42!
 }
+
+func ExampleFold() {
+	fn := func(v int) string { return strconv.Itoa(v) + "!" }
+	ifNone := "not found"
+
+	some := options.SomeOf(42)
+	fmt.Println(options.Fold[int, string](some, ifNone)(fn))
+
+	none := options.NoneOf[int]()
+	fmt.Println(options.Fold[int, string](none, ifNone)(fn))
+
+	// Output:
+	// 42!
+	// not found
+}
