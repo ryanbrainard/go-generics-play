@@ -85,6 +85,17 @@ func Map[L, R, S any](e Either[L, R], fn func(R) S) Either[L, S] {
 	}
 }
 
+func FlatMap[L, R, S any](e Either[L, R], fn func(R) Either[L, S]) Either[L, S] {
+	switch e := e.(type) {
+	case left[L, R]:
+		return left[L, S]{e.l}
+	case right[L, R]:
+		return fn(e.r)
+	default:
+		panic("impossible")
+	}
+}
+
 // Fold applies fl if this is a Left or fr if this is a Right
 func Fold[L, R, C any](e Either[L, R], fl func(L) C, fr func(R) C) C {
 	switch e := e.(type) {
