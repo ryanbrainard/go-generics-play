@@ -41,6 +41,7 @@ func Example_full() {
 		})
 	fmt.Println(results.Fold(unsuccessfulChain, onSuccess, onError))
 
+	// output:
 	// server: Red
 	// server: Blue
 	// success: server Blue called successfully
