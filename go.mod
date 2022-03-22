@@ -1,3 +1,3 @@
-module go.ryanbrainard.com/go-generics-play
+module github.com/ryanbrainard/go-generics-play
 
 go 1.18

@@ -2,7 +2,7 @@ package options_test
 
 import (
 	"fmt"
-	"go.ryanbrainard.com/go-generics-play/monads/options"
+	"github.com/ryanbrainard/go-generics-play/monads/options"
 	"strconv"
 )
 

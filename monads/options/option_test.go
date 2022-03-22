@@ -1,7 +1,7 @@
 package options
 
 import (
-	"go.ryanbrainard.com/go-generics-play/testutil"
+	"github.com/ryanbrainard/go-generics-play/testutil"
 	"testing"
 )
 

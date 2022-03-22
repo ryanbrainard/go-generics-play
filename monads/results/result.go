@@ -1,6 +1,6 @@
 package results
 
-import "go.ryanbrainard.com/go-generics-play/monads/eithers"
+import "github.com/ryanbrainard/go-generics-play/monads/eithers"
 
 type Result[R any] struct {
 	e eithers.Either[error, R]

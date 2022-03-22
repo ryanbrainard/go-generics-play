@@ -3,7 +3,7 @@ package eithers_test
 import (
 	"errors"
 	"fmt"
-	"go.ryanbrainard.com/go-generics-play/monads/eithers"
+	"github.com/ryanbrainard/go-generics-play/monads/eithers"
 )
 
 var (
