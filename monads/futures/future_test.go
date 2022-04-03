@@ -28,19 +28,19 @@ func TestFutureEverything(t *testing.T) {
 
 	tests := []struct {
 		name string
-		exec func(func(ctx context.Context) results.Result[string]) Future[string]
+		exec Executor[string]
 	}{
 		{
 			name: "chanFuture",
-			exec: NewChanFuture[string],
+			exec: ExecuteChanFuture[string],
 		},
 		{
 			name: "mxFuture",
-			exec: NewMxFuture[string],
+			exec: ExecuteMxFuture[string],
 		},
 		{
 			name: "wgFuture",
-			exec: NewWgFuture[string],
+			exec: ExecuteWgFuture[string],
 		},
 	}
 	for _, tt := range tests {
@@ -48,12 +48,14 @@ func TestFutureEverything(t *testing.T) {
 			onSuccess := func(r string) string { return r }
 			onError := func(err error) string { return err.Error() }
 
-			realizedFuture := tt.exec(testShortTask)
+			ctx, cancel := context.WithCancel(context.Background())
+
+			realizedFuture := tt.exec(ctx, testShortTask)
 			testutil.AssertEqual(t, testTaskWant, results.Fold(realizedFuture.Get(), onSuccess, onError))
 			testutil.AssertEqual(t, testTaskWant, results.Fold(realizedFuture.Get(), onSuccess, onError))
 
-			cancelledFuture := tt.exec(testLongTask)
-			cancelledFuture.Cancel()
+			cancelledFuture := tt.exec(ctx, testLongTask)
+			cancel()
 			testutil.AssertEqual(t, context.Canceled.Error(), results.Fold(cancelledFuture.Get(), onSuccess, onError))
 			testutil.AssertEqual(t, context.Canceled.Error(), results.Fold(cancelledFuture.Get(), onSuccess, onError))
 		})

@@ -7,19 +7,16 @@ import (
 )
 
 type mxFuture[V any] struct {
-	cancel context.CancelFunc
 	mx     sync.Mutex
 	result results.Result[V]
 }
 
-func NewMxFuture[V any](task func(ctx context.Context) results.Result[V]) Future[V] {
-	ctx, cancel := context.WithCancel(context.Background())
-	f := &mxFuture[V]{cancel: cancel}
+func ExecuteMxFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
+	f := &mxFuture[V]{}
 	f.mx.Lock()
 
 	go func() {
 		defer f.mx.Unlock()
-		defer f.cancel()
 		f.result = task(ctx)
 	}()
 
@@ -31,8 +28,4 @@ func (f *mxFuture[V]) Get() results.Result[V] {
 	defer f.mx.Unlock()
 
 	return f.result
-}
-
-func (f *mxFuture[V]) Cancel() {
-	f.cancel()
 }
