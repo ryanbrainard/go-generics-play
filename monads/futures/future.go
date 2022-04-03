@@ -5,5 +5,6 @@ import (
 )
 
 type Future[V any] interface {
+	Cancel()
 	Get() results.Result[V]
 }

@@ -77,3 +77,8 @@ func MapError[R any](r Result[R], onError func(error) error) Result[R] {
 func Fold[R, C any](r Result[R], onSuccess func(R) C, onError func(error) C) C {
 	return eithers.Fold(r.e, onError, onSuccess)
 }
+
+// SplitFold returns a new type C on success or error by applying the provided function.
+func SplitFold[R, C any](r Result[R], onSuccessOrError func(R, error) C) C {
+	return onSuccessOrError(r.Split())
+}

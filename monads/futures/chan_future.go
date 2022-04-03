@@ -6,22 +6,32 @@ import (
 )
 
 type chanFuture[V any] struct {
+	cancel context.CancelFunc
 	done   chan struct{}
 	result results.Result[V]
 }
 
 func NewChanFuture[V any](task func(ctx context.Context) results.Result[V]) Future[V] {
+	ctx, cancel := context.WithCancel(context.Background())
 	f := &chanFuture[V]{
-		done: make(chan struct{}),
+		cancel: cancel,
+		done:   make(chan struct{}),
 	}
+
 	go func() {
-		f.result = task(context.TODO())
+		f.result = task(ctx)
 		close(f.done)
 	}()
+
 	return f
 }
 
 func (f *chanFuture[V]) Get() results.Result[V] {
 	<-f.done
+
 	return f.result
+}
+
+func (f *chanFuture[V]) Cancel() {
+	f.cancel()
 }
