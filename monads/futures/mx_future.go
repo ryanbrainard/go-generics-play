@@ -11,7 +11,7 @@ type mxFuture[V any] struct {
 	result results.Result[V]
 }
 
-func ExecuteMxFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
+func NewMxFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
 	f := &mxFuture[V]{}
 	f.mx.Lock()
 

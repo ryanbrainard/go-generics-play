@@ -10,3 +10,7 @@ type Executor[V any] func(context.Context, func(context.Context) results.Result[
 type Future[V any] interface {
 	Get() results.Result[V]
 }
+
+type Runnable interface {
+	Run()
+}

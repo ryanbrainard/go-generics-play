@@ -32,15 +32,19 @@ func TestFutureEverything(t *testing.T) {
 	}{
 		{
 			name: "chanFuture",
-			exec: ExecuteChanFuture[string],
+			exec: NewChanFuture[string],
 		},
 		{
 			name: "mxFuture",
-			exec: ExecuteMxFuture[string],
+			exec: NewMxFuture[string],
 		},
 		{
 			name: "wgFuture",
-			exec: ExecuteWgFuture[string],
+			exec: NewWgFuture[string],
+		},
+		{
+			name: "onceFuture",
+			exec: NewOnceFuture[string],
 		},
 	}
 	for _, tt := range tests {

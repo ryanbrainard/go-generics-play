@@ -10,7 +10,7 @@ type chanFuture[V any] struct {
 	result results.Result[V]
 }
 
-func ExecuteChanFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
+func NewChanFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
 	f := &chanFuture[V]{
 		done: make(chan struct{}),
 	}

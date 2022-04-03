@@ -11,7 +11,7 @@ type wgFuture[V any] struct {
 	result results.Result[V]
 }
 
-func ExecuteWgFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
+func NewWgFuture[V any](ctx context.Context, task func(context.Context) results.Result[V]) Future[V] {
 	f := &wgFuture[V]{}
 	f.wg.Add(1)
 
