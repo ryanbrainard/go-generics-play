@@ -8,6 +8,12 @@ import (
 )
 
 func Test_future_Get(t *testing.T) {
+	testTaskWant := "all done"
+	testTask := func(context.Context) results.Result[string] {
+		time.Sleep(time.Millisecond)
+		return results.Ok(testTaskWant)
+	}
+
 	tests := []struct {
 		name string
 		exec func(func(ctx context.Context) results.Result[string]) Future[string]
@@ -17,20 +23,20 @@ func Test_future_Get(t *testing.T) {
 		{
 			name: "chanFuture",
 			exec: NewChanFuture[string],
-			task: func(context.Context) results.Result[string] {
-				time.Sleep(time.Millisecond)
-				return results.Ok("all done")
-			},
-			want: "all done",
+			task: testTask,
+			want: testTaskWant,
 		},
 		{
 			name: "mxFuture",
 			exec: NewMxFuture[string],
-			task: func(context.Context) results.Result[string] {
-				time.Sleep(time.Millisecond)
-				return results.Ok("all done")
-			},
-			want: "all done",
+			task: testTask,
+			want: testTaskWant,
+		},
+		{
+			name: "wgFuture",
+			exec: NewWgFuture[string],
+			task: testTask,
+			want: testTaskWant,
 		},
 	}
 	for _, tt := range tests {
