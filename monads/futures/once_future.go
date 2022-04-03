@@ -6,6 +6,9 @@ import (
 	"sync"
 )
 
+var _ Future[struct{}] = &onceFuture[struct{}]{}
+var _ Runnable = &onceFuture[struct{}]{}
+
 type onceFuture[V any] struct {
 	once     sync.Once
 	runnable func()

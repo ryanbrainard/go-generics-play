@@ -57,11 +57,20 @@ func TestFutureEverything(t *testing.T) {
 			realizedFuture := tt.exec(ctx, testShortTask)
 			testutil.AssertEqual(t, testTaskWant, results.Fold(realizedFuture.Get(), onSuccess, onError))
 			testutil.AssertEqual(t, testTaskWant, results.Fold(realizedFuture.Get(), onSuccess, onError))
+			if f, ok := realizedFuture.(Running); ok {
+				testutil.AssertEqual(t, false, f.Running())
+			}
 
 			cancelledFuture := tt.exec(ctx, testLongTask)
+			if f, ok := cancelledFuture.(Running); ok {
+				testutil.AssertEqual(t, true, f.Running())
+			}
 			cancel()
 			testutil.AssertEqual(t, context.Canceled.Error(), results.Fold(cancelledFuture.Get(), onSuccess, onError))
 			testutil.AssertEqual(t, context.Canceled.Error(), results.Fold(cancelledFuture.Get(), onSuccess, onError))
+			if f, ok := cancelledFuture.(Running); ok {
+				testutil.AssertEqual(t, false, f.Running())
+			}
 		})
 	}
 }

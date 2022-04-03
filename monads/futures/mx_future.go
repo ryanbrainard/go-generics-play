@@ -29,3 +29,11 @@ func (f *mxFuture[V]) Get() results.Result[V] {
 
 	return f.result
 }
+
+func (f *mxFuture[V]) Running() bool {
+	locked := f.mx.TryLock()
+	if locked {
+		f.mx.Unlock()
+	}
+	return !locked
+}

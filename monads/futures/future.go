@@ -14,3 +14,7 @@ type Future[V any] interface {
 type Runnable interface {
 	Run()
 }
+
+type Running interface {
+	Running() bool
+}
