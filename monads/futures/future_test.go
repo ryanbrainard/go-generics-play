@@ -8,13 +8,14 @@ import (
 	"time"
 )
 
-func TestFutureEverything(t *testing.T) {
-	testTaskWant := "all done"
-	testShortTask := func(context.Context) results.Result[string] {
-		time.Sleep(time.Millisecond)
+var (
+	testTaskWant = "all done"
+
+	testShortTask = func(context.Context) results.Result[string] {
 		return results.Ok(testTaskWant)
 	}
-	testLongTask := func(ctx context.Context) results.Result[string] {
+
+	testLongTask = func(ctx context.Context) results.Result[string] {
 		timer := time.NewTimer(time.Minute)
 		for {
 			select {
@@ -26,7 +27,7 @@ func TestFutureEverything(t *testing.T) {
 		}
 	}
 
-	tests := []struct {
+	tests = []struct {
 		name string
 		exec Executor[string]
 	}{
@@ -47,6 +48,9 @@ func TestFutureEverything(t *testing.T) {
 			exec: NewOnceFuture[string],
 		},
 	}
+)
+
+func TestFutureEverything(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			onSuccess := func(r string) string { return r }
@@ -70,6 +74,23 @@ func TestFutureEverything(t *testing.T) {
 			testutil.AssertEqual(t, context.Canceled.Error(), results.Fold(cancelledFuture.Get(), onSuccess, onError))
 			if f, ok := cancelledFuture.(Running); ok {
 				testutil.AssertEqual(t, false, f.Running())
+			}
+		})
+	}
+}
+
+func BenchmarkFutureEverything(b *testing.B) {
+	for _, tt := range tests {
+		b.Run(tt.name, func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				ctx, cancel := context.WithCancel(context.Background())
+
+				realizedFuture := tt.exec(ctx, testShortTask)
+				realizedFuture.Get()
+
+				cancelledFuture := tt.exec(ctx, testLongTask)
+				cancel()
+				cancelledFuture.Get()
 			}
 		})
 	}
